@@ -19,8 +19,8 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.geekykel.blockchain.controller"))
+                .paths(PathSelectors.ant("/api/v1/*"))
                 .build()
                 .apiInfo(apiInfo());
     }
