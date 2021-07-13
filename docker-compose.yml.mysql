@@ -1,0 +1,39 @@
+version: '3.1'
+
+# Define services
+services:
+  # App backend service
+  app-server:
+    # Configuration for building the docker image for the backend service
+    container_name: app-server
+    image: 'kelvinator07/blockchaindemo:v2.0.0'
+    build: .
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - db # This service depends on mysql. Start that first.
+    environment: # Pass environment variables to the service  name-of-container:3306
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/mysql-blockchain?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=kelvin
+      - SPRING_DATASOURCE_PASSWORD=kelvin
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#      - SPRING_SQL_INIT_MODE=always
+
+  # Database Service (Mysql)
+  db:
+    image: mysql:8.0.25
+    container_name: mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mysql-blockchain
+      MYSQL_USER: kelvin
+      MYSQL_PASSWORD: kelvin
+#      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - db-data:/var/lib/mysql
+
+# Volumes
+volumes:
+  db-data:
